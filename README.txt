@@ -1,1 +1,1 @@
-У меня есть новая цель: я хочу попробовать написать оформление и содержимое репозитория так, чтобы человек, который заходит сюда впервые понимал чо как происходит
+I have a new goal: I want to try to write the design and contents of the repository so that the person who comes here for the first time understands how it happens
