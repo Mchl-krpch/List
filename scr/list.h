@@ -26,7 +26,7 @@
 typedef int list_t;
 
 /**
- * @brief Main list structure
+ * @brief Element of List structure
  * 
  * @param prew_index contains prew element index
  * @param content contains value in this cell of
@@ -34,11 +34,32 @@ typedef int list_t;
  * 
  * @param next_index contains next element index
  */
+struct CellExample
+{
+    int prew_index = -1;
+
+    list_t content =  0;
+
+    int next_index = -1;
+};
+
+/**
+ * @brief Main list structure
+ * 
+ * @param capacity current capacity of list
+ * @param head first element in queque of list
+ * @param tail last element in queque of list
+ * @param[in,out] cells
+ */
 struct ListExample
 {
-	int prew_index = -1;
+	size_t capacity    = 0;
 
-	list_t content =  0;
+    int head           = 0;
+    int tail           = 0;
+    int free           = 0;
+
+	CellExample *cells =  0;
 
 	int next_index = -1;
 };
@@ -60,7 +81,7 @@ enum class ListErr: char
 /**
  * @brief Constructor list data
  * 
- * @param list structrure of list
+ * @param[in,out] list
  * 
  * @return ListErr value [ check ListErr enum ]
  */
