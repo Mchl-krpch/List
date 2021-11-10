@@ -21,6 +21,7 @@
 #define LIST_H
 
 #define INCREASE_COEF 2
+#define POISON_LIST   0xF2EE
 
 /**
  * @brief list value type
@@ -137,7 +138,7 @@ ListErr InsertAfter (int index, ListExample *list, list_t value);
  * 
  * @return ListErr value [ check ListErr enum ]
  */
-ListErr listRemove (ListExample *list, size_t index, list_t value);
+ListErr listRemove (ListExample *list, int index);
 
 /**
  * @brief Find empty position in list
@@ -177,6 +178,13 @@ int listPrew (ListExample *list, size_t index);
  * @return ListErr value [ check ListErr enum ]
  */
 int listNext (ListExample *list, size_t index);
+
+/**
+ * @brief Dump list example
+ * 
+ * @param list current list structure
+ */
+void listDump (ListExample* List);
 
 
 #endif//LIST_H

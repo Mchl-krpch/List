@@ -56,7 +56,6 @@ int listFindEmptyCell (ListExample *list)
 	}
 
 	int save_free = list->free;
-	printf("we save: %d\n",list->free);
 
 	list->free = list->cells[list->free].next_index;
 
@@ -103,12 +102,32 @@ ListErr InsertAfter (int index, ListExample *list, list_t value)
 
 //--------------------------------------------------------------------------------
 
+ListErr listRemove (ListExample *list, int index)
+{
+	assert (list != nullptr);
+
+	list->cells[index].elem = 0;
+
+    list->cells[list->cells[index].next_index].prew_index = list->cells[index].prew_index;
+    list->cells[list->cells[index].prew_index].next_index = list->cells[index].next_index;
+
+    list->cells[index].next_index = list->free;
+    list->cells[index].prew_index = -1;
+
+    list->free = index;
+
+    list->size--;
+
+    return ListErr::noErr;
+}
+
+//--------------------------------------------------------------------------------
+
 ListErr listChangeCapacity (ListExample *list, int new_capacity)
 {
 	list->cells = (CellExample *)realloc (list->cells, new_capacity * sizeof (CellExample) );
 
 	list->cells[list->capacity - 1].next_index = list->capacity;
-	printf ("[%2d] last index: %d\n", list->capacity - 1, list->cells[list->capacity - 1].next_index);
 
 	for (int elem = list->capacity; elem < new_capacity; elem++) {
 		list->cells[elem].prew_index = -1;
@@ -162,7 +181,29 @@ int listNext (ListExample *list, size_t index)
 {
 	assert (list != nullptr);
 
-	printf ("\t NEXT: %d\n", list->cells[index].next_index);
-
 	return list->cells[index].next_index;
+}
+
+//--------------------------------------------------------------------------------
+
+void listDump (ListExample* list)
+{
+    printf("\n\n[ ######################### DUMP ################################ ]\n");
+    printf("  ---------------------------------------------------------------\n");
+
+    for (int checked_elem = 0; checked_elem < list->capacity; checked_elem++) {
+	    printf("el: [%3d] is %4d\t", checked_elem, list->cells[checked_elem].elem);
+	    printf("Next [%3d] is %4d \t", checked_elem , list->cells[checked_elem].next_index);
+	    printf("Prev [%3d] is %4d\n", checked_elem ,list->cells[checked_elem].prew_index);
+	}
+	printf("  ---------------------------------------------------------------\n");
+    printf("\n");
+    printf("The maximum size of list - %d\n", list->capacity);
+    printf("Free`s index - %d\n", list->free);
+    printf("Size - %d\n",list->size);
+    printf("Head - %d\n", list->head);
+    printf("Tail - %d\n", list->tail);
+    printf("============================\n\n");
+    printf("I hope it helps you, good luck debug\n");
+    //getchar();
 }
