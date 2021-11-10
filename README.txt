@@ -55,8 +55,3 @@ insertion is performed by changing the indices of the element, after which the i
 we change indices 1-st and 2nd element          
 (before & after inserted element elements) 
 to pointers to free element
-
-
-
-
-
