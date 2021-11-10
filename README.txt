@@ -45,8 +45,8 @@ insertion is performed by changing the indices of the element, after which the i
 { 0, 9, 2}          { 0, 9, 4} <     { 0, 9, 4}
 { 1, 9, 3}        > { 4, 9, 3}       { 4, 9, 3}
 { 2, 9, 0}          { 2, 9, 0}       { 2, 9, 0}
-{-1, 0, 0} <free    {-1, 0, 0}     > { 1, 7, 2}  <free
-                                  
+{-1, 0, 0} <free    {-1, 0, 0}     > { 1, 7, 2} 
+                                         ...  -  we should change capacity
 we change indices 1-st and 2nd element          
 (before & after inserted element elements) 
 to pointers to free element
