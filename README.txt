@@ -9,7 +9,7 @@ I have a new goal: I want to try to write the design and contents of the reposit
 
 
 
-                                      The program should solve the following problems:
+                                     The program should solve the following problems:
 -----
 [ 1 ] CREATING AN EMPTY LIST TO GET STARTED
 -----
