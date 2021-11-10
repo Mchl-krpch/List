@@ -7,6 +7,8 @@ I have a new goal: I want to try to write the design and contents of the reposit
    Autor: (Michael Krapchatov) 11.2021                                              I would be glad if you write issue
 
 
+                                           ====================================
+
 The program should solve the following problems:
 
 -----
