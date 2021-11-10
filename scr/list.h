@@ -20,6 +20,8 @@
 #ifndef LIST_H
 #define LIST_H
 
+#define INCREASE_COEF 2
+
 /**
  * @brief list value type
  */
@@ -38,7 +40,7 @@ struct CellExample
 {
     int prew_index = -1;
 
-    list_t content =  0;
+    list_t elem    =  0;
 
     int next_index = -1;
 };
@@ -53,15 +55,16 @@ struct CellExample
  */
 struct ListExample
 {
-	size_t capacity    = 0;
+	int    capacity     = 0;
 
-    int head           = 0;
-    int tail           = 0;
-    int free           = 0;
+    int head            = 0;
+    int tail            = 0;
+    int free            = 0;
+    int size            = 0;
 
-	CellExample *cells =  0;
+    int save_index      = 0;
 
-	int next_index = -1;
+	CellExample *cells  = 0;
 };
 
 /**
@@ -85,7 +88,7 @@ enum class ListErr: char
  * 
  * @return ListErr value [ check ListErr enum ]
  */
-ListErr listCtor (ListExample* list, list_t start_capacity);
+ListErr listCtor (ListExample* list, int start_capacity);
 
 /**
  * @brief Destructror of list data
@@ -97,6 +100,15 @@ ListErr listCtor (ListExample* list, list_t start_capacity);
 ListErr listDtor (ListExample *list);
 
 /**
+ * @brief Print all list data in stdout
+ * 
+ * @param[in,out] list
+ * 
+ * @return ListErr value [ check ListErr enum ]
+ */
+ListErr printList (ListExample *list);
+
+/**
  * @brief Change list capacity to new velue
  * 
  * @param list current list structure
@@ -104,7 +116,7 @@ ListErr listDtor (ListExample *list);
  * 
  * @return ListErr value [ check ListErr enum ]
  */
-ListErr listChangeCapacity (ListExample *list, size_t new_cap);
+ListErr listChangeCapacity (ListExample *list, int new_capacity);
 
 /**
  * @brief Insert new element on empty position in list
@@ -115,7 +127,7 @@ ListErr listChangeCapacity (ListExample *list, size_t new_cap);
  * 
  * @return ListErr value [ check ListErr enum ]
  */
-ListErr listInsert (ListExample *list, int index, list_t value);
+ListErr InsertAfter (int index, ListExample *list, list_t value);
 
 /**
  * @brief Remove element on [ index ] - position 
@@ -125,7 +137,7 @@ ListErr listInsert (ListExample *list, int index, list_t value);
  * 
  * @return ListErr value [ check ListErr enum ]
  */
-ListErr listRemove (ListExample *list, int index, list_t value);
+ListErr listRemove (ListExample *list, size_t index, list_t value);
 
 /**
  * @brief Find empty position in list
@@ -134,7 +146,7 @@ ListErr listRemove (ListExample *list, int index, list_t value);
  * 
  * @return ListErr value [ check ListErr enum ]
  */
-ListErr listFindEmptyCell (ListExample *list);
+int listFindEmptyCell (ListExample *list);
 
 /**
  * @brief Change list capacity to new velue
@@ -144,7 +156,7 @@ ListErr listFindEmptyCell (ListExample *list);
  * 
  * @return ListErr value [ check ListErr enum ]
  */
-list_t listGet (ListExample *list, int index);
+list_t listGet (ListExample *list, size_t index);
 
 /**
  * @brief ListGet analogue, but we get prew elemetn
@@ -154,7 +166,7 @@ list_t listGet (ListExample *list, int index);
  * 
  * @return ListErr value [ check ListErr enum ]
  */
-list_t listPrew (ListExample *list, int index);
+int listPrew (ListExample *list, size_t index);
 
 /**
  * @brief ListGet analogue, but we get Next elemetn
@@ -164,7 +176,7 @@ list_t listPrew (ListExample *list, int index);
  * 
  * @return ListErr value [ check ListErr enum ]
  */
-list_t listNext (ListExample *list, int index);
+int listNext (ListExample *list, size_t index);
 
 
 #endif//LIST_H

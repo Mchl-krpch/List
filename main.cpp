@@ -4,17 +4,25 @@
 
 int main (void)
 {
-	printf("List program Executin...\n");
+	printf ("List program Executin...\n");
 
 	ListExample list = {};
+	listCtor (&list, 16);
 
-	listCtor(&list, 16);
+	for (int elem = 0; elem < 19; elem++) {
+		InsertAfter (elem, &list, 99);
+	}
 
-	list.cells[0].content = 9;
+	
+	for (int elem = 0; elem < 19; elem++) {
+		InsertAfter (3, &list, 11);
+	}
+	
+	printf("size now: %d\n", list.size);
 
-	printf("%d", list.cells[0].content);
+	printList (&list);
 
-	listDtor(&list);
+	listDtor (&list);
 	
 	return 0;
 }
