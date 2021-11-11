@@ -253,7 +253,7 @@ void createGraph (ListExample *list)
 	assert (list != nullptr);
 
 	char graph_name[MAX_NAME_LEN] = {};
-	sprintf(graph_name, "dump_file.dot");
+	sprintf(graph_name, "%sdump_file.dot", DIR_PTR);
 
 	FILE *graph_file = fopen (graph_name, "w");
 	assert (graph_file != nullptr);
@@ -290,7 +290,7 @@ void createGraph (ListExample *list)
 
 // [ #### RENDER COMMAND ############################# ]
 	char command[MAX_COMMAND_LEN] = {};
-	sprintf (command, "dot dump_file.dot -T png -o dump_file.png");
+	sprintf (command, "dot %sdump_file.dot -T png -o %sdump_file.png", DIR_PTR, DIR_PTR);
 	system (command);
 
 	return;

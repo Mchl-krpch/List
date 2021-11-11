@@ -24,7 +24,7 @@
 
 #define MAX_NAME_LEN 32
 #define MAX_COMMAND_LEN 100
-#define DIR_PTR "../"
+#define DIR_PTR "visualize/"
 #define DEBUG
 
 #define INCREASE_COEF 2

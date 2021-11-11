@@ -20,7 +20,6 @@ int main (void)
 		InsertAfter (3, &list, 11);
 	}
 	
-
 	createGraph (&list);
 
 	printList (&list);
