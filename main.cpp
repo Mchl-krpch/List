@@ -20,10 +20,7 @@ int main (void)
 	for (int elem = 0; elem < 19; elem++) {
 		InsertAfter (3, &list, 11);
 	}
-<<<<<<< HEAD
-=======
 
->>>>>>> 5087143a3a18eb1a0e1bb1932d42472025f920b5
 	createGraph (&list);
 
 	printList (&list);
