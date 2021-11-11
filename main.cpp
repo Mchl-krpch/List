@@ -14,16 +14,12 @@ int main (void)
 		InsertAfter (elem, &list, 99);
 	}
 
-	
+	/*
+	*/
 // [ #### ADD TO THE MIDDLE ############################### ]
 	for (int elem = 0; elem < 19; elem++) {
 		InsertAfter (3, &list, 11);
 	}
-<<<<<<< HEAD
-	
-=======
-
->>>>>>> 62853979dc13aa24e8447ea0f68dd76cd3372f18
 	createGraph (&list);
 
 	printList (&list);
