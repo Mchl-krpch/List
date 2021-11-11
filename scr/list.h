@@ -70,8 +70,6 @@ struct ListExample
     int free            = 0;
     int size            = 0;
 
-    int save_index      = 0;
-
     #ifdef DEBUG
         FILE *dump_file = nullptr;
     #endif//DEBUG

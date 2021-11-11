@@ -108,10 +108,9 @@ ListErr InsertAfter (int index, ListExample *list, list_t value)
 // [ #### WORKING WITH ELEMENTS IN TAIL OF LIST ############################## ]
 	if (index == list->size) {
 		if (list->cells[inserted_elem].prew_index != 0) {
-			list->cells[list->cells[inserted_elem].prew_index].next_index = list->save_index;
+			list->cells[list->cells[inserted_elem].prew_index].next_index = inserted_elem;
 		}
 
-		list->save_index = list->cells[inserted_elem].next_index;
 		list->cells[inserted_elem].next_index = 0;
 
 		list->size++;
