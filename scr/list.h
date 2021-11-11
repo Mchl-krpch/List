@@ -20,6 +20,13 @@
 #ifndef LIST_H
 #define LIST_H
 
+#include <stdlib.h>
+
+#define MAX_NAME_LEN 32
+#define MAX_COMMAND_LEN 100
+#define DIR_PTR "../"
+#define DEBUG
+
 #define INCREASE_COEF 2
 #define POISON_LIST   0xF2EE
 
@@ -64,6 +71,10 @@ struct ListExample
     int size            = 0;
 
     int save_index      = 0;
+
+    #ifdef DEBUG
+        FILE *dump_file = nullptr;
+    #endif//DEBUG
 
 	CellExample *cells  = 0;
 };
@@ -185,6 +196,13 @@ int listNext (ListExample *list, size_t index);
  * @param list current list structure
  */
 void listDump (ListExample* List);
+
+/**
+ * @brief Create graph of list connections [ used graphviz library ]
+ * 
+ * @param list current list structure
+ */
+void createGraph (ListExample *list);
 
 
 #endif//LIST_H

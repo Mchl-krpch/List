@@ -9,23 +9,21 @@ int main (void)
 	ListExample list = {};
 	listCtor (&list, 16);
 
+// [ #### ADD TO END OF LIST ############################## ]
 	for (int elem = 0; elem < 5; elem++) {
 		InsertAfter (elem, &list, 99);
 	}
 
-	/*
+	
+// [ #### ADD TO THE MIDDLE ############################### ]
 	for (int elem = 0; elem < 19; elem++) {
 		InsertAfter (3, &list, 11);
 	}
-	*/
-
-	listRemove (&list, 2);
 	
-	printf("size now: %d\n", list.size);
 
-	listDump (&list);
+	createGraph (&list);
 
-	// printList (&list);
+	printList (&list);
 
 	listDtor (&list);
 	
