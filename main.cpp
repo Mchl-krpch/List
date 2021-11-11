@@ -19,7 +19,6 @@ int main (void)
 	for (int elem = 0; elem < 19; elem++) {
 		InsertAfter (3, &list, 11);
 	}
-	
 
 	createGraph (&list);
 
