@@ -74,13 +74,10 @@ int main (void)
 		InsertAfter (3, &list, 11);
 	}
 
-<<<<<<< HEAD
 	// createGraph (&list);
 
 	// printList (&list);
-=======
 	createGraph (&list);
->>>>>>> 4b927d2bf9d4f722eeefad6ef6f2d2c577e18740
 
 	tests (&list);
 
