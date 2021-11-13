@@ -111,28 +111,16 @@ ListErr InsertAfter (int index, ListExample *list, list_t value)
   list->cells[inserted_elem].elem = value;
 
   list->cells[inserted_elem].prew_index = index;
-
-// [ #### WORKING WITH ELEMENTS IN TAIL OF LIST ############################## ]
-  if (index == list->size) {
-    if (list->cells[inserted_elem].prew_index != 0) {
-      list->cells[list->cells[inserted_elem].prew_index].next_index = inserted_elem;
-    }
-
-    list->cells[inserted_elem].next_index = 0;
-
-    list->size++;
-    list->tail = inserted_elem;
-
-    return ListErr::noErr;
-  }
-
-// [ #### WORKING WITH ELEMENTS IN MIDL OF LIST ############################# ]
   list->cells[listNext (list, index)].prew_index = inserted_elem;
 
   list->cells[inserted_elem].next_index = list->cells[index].next_index;
   list->cells[index].next_index = inserted_elem;
 
   list->size++;
+
+  if (list->cells[inserted_elem].next_index == 0) {
+    list->tail = inserted_elem;
+  }
 
   return ListErr::noErr;
 }
@@ -142,8 +130,8 @@ ListErr InsertAfter (int index, ListExample *list, list_t value)
 ListErr listRemove (ListExample *list, int index)
 {
   assert (list != nullptr);
-  
-  if (index < 0) {
+
+  if (index < 0 || list->cells[index].prew_index == -1) {
     return ListErr::bad_index;
   }
 
@@ -233,7 +221,7 @@ int listPrew (ListExample *list, int index)
 int listNext (ListExample *list, int index)
 {
   assert (list != nullptr);
-  assert (index > 0);
+  assert (index >= 0);
 
   return list->cells[index].next_index;
 }
@@ -356,15 +344,6 @@ ListErr listVerify (ListExample *list, int *find_bad_cell)
     if (cur_cell.next_index < 0 && cur_cell.prew_index != -1) {
       *find_bad_cell = cur_node;
       return ListErr::bad_index_next;
-    }
-
-    if (cur_node == 0) {
-      if (cur_cell.next_index != cur_cell.prew_index) {
-        *find_bad_cell = cur_node;
-        return ListErr::break_point;
-      }
-
-      continue;
     }
 
     if (cur_cell.prew_index == 0 && cur_node > 0 && list->head != 0) {
