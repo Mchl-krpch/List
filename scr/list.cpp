@@ -137,6 +137,9 @@ ListErr InsertAfter (int index, ListExample *list, list_t value)
 ListErr listRemove (ListExample *list, int index)
 {
   assert (list != nullptr);
+  if (index < 0) {
+    return ListErr::bad_insert_index;
+  }
 
   list->cells[index].elem = 0;
 
