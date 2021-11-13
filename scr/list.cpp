@@ -98,7 +98,7 @@ ListErr InsertAfter (int index, ListExample *list, list_t value)
 {
   assert (list  != nullptr);
   if (index < 0) {
-    return ListErr::bad_insert_index;
+    return ListErr::bad_index;
   }
 
   int inserted_elem = listFindEmptyCell (list);
@@ -138,7 +138,7 @@ ListErr listRemove (ListExample *list, int index)
 {
   assert (list != nullptr);
   if (index < 0) {
-    return ListErr::bad_insert_index;
+    return ListErr::bad_index;
   }
 
   list->cells[index].elem = 0;
@@ -391,7 +391,7 @@ const char* translateErrorCode (ListErr error)
   switch (error) {
     case ListErr::noErr:                 return "No errors in list";
 
-    case ListErr::bad_insert_index:      return "Incorrect insertion data";
+    case ListErr::bad_index:      return "Incorrect insertion data";
     case ListErr::strucNullptr:          return "Bad ptr to structure";
     case ListErr::listEmpty:             return "Empy list error";
     case ListErr::badElType:             return "Element in list have bad type";

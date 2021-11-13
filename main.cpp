@@ -73,12 +73,10 @@ int main (void)
 	for (int elem = 0; elem < 19; elem++) {
 		InsertAfter (3, &list, 11);
 	}
-
 	InsertAfter (-1, &list, 55);
 	listRemove (&list, -5);
-	// createGraph (&list);
 
-	// printList (&list);
+	createGraph (&list);
 
 	tests (&list);
 

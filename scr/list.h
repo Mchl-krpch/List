@@ -87,7 +87,7 @@ enum class ListErr: char
 {
   noErr,
 // [ ### general ### ]
-  bad_insert_index,
+  bad_index,
   strucNullptr,
   listEmpty,
   badElType,
