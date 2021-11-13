@@ -24,215 +24,218 @@
 #include "list.h"
 
 #ifdef DEBUG
-	#define OUT list->dump_file
+  #define OUT list->dump_file
 #else
-	#define OUT stdout
+  #define OUT stdout
 #endif
 
 ListErr listCtor (ListExample* list, int start_capacity)
 {
-	assert (list != nullptr);
+  assert (list != nullptr);
 
-	list->head     = 0;
-	list->tail     = 0;
-	list->free	   = 1;
+  list->head     = 0;
+  list->tail     = 0;
+  list->free     = 1;
 
-	CellExample *tryCalloc = (CellExample *)calloc (start_capacity, sizeof (CellExample) );
-	assert (tryCalloc != nullptr);
-	list->cells = tryCalloc;
+  CellExample *tryCalloc = (CellExample *)calloc (start_capacity, sizeof (CellExample) );
+  assert (tryCalloc != nullptr);
+  list->cells = tryCalloc;
 
-	list->capacity = start_capacity;
+  list->capacity = start_capacity;
 
-	list->cells[0] = {0, 0, 0};
+  list->cells[0] = {0, 0, 0};
 
-	for (int elem = 1; elem < list->capacity; elem++) {
-		list->cells[elem].prew_index = (elem == 0 || elem == list->capacity) ? 0: -1;
+  for (int elem = 1; elem < list->capacity; elem++) {
+    list->cells[elem].prew_index = (elem == 0 || elem == list->capacity) ? 0: -1;
 
-		list->cells[elem].next_index = (elem == list->capacity - 1) ? 0 : elem + 1;
-	}
+    list->cells[elem].next_index = (elem == list->capacity - 1) ? 0 : elem + 1;
+  }
 
-	#ifdef DEBUG
-		list->dump_file = fopen("dump.txt", "w");
-	#endif//DEBUG
+  #ifdef DEBUG
+    list->dump_file = fopen("dump.txt", "w");
+  #endif//DEBUG
 
-	return ListErr::noErr;
+  return ListErr::noErr;
 }
 
 //--------------------------------------------------------------------------------
 
 ListErr printList (ListExample *list)
 {
-	assert (list != nullptr);
+  assert (list != nullptr);
 
-	for (int elem = 0; elem < list->capacity; elem++) {
-		printf ("{[%2d] %2d, %4d, %2d}\n",
-			elem,
-			list->cells[elem].prew_index,
-			list->cells[elem].elem,
-			list->cells[elem].next_index);
-	}
+  for (int elem = 0; elem < list->capacity; elem++) {
+    printf ("%2d {%2d, %4d, %2d}\n",
+      elem,
+      list->cells[elem].prew_index,
+      list->cells[elem].elem,
+      list->cells[elem].next_index);
+  }
 
-	return ListErr::noErr;
+  return ListErr::noErr;
 }
 
 //--------------------------------------------------------------------------------
 
 int listFindEmptyCell (ListExample *list)
 {
-	assert (list != nullptr);
+  assert (list != nullptr);
 
-	if (list->cells[list->free].next_index == 0) {
-		listChangeCapacity (list, list->capacity * INCREASE_COEF);
-	}
+  if (list->cells[list->free].next_index == 0) {
+    listChangeCapacity (list, list->capacity * INCREASE_COEF);
+  }
 
-	int save_free = list->free;
+  int save_free = list->free;
 
-	list->free = list->cells[list->free].next_index;
+  list->free = list->cells[list->free].next_index;
 
-	return save_free;
+  return save_free;
 }
 
 //--------------------------------------------------------------------------------
 
 ListErr InsertAfter (int index, ListExample *list, list_t value)
 {
-	assert (list != nullptr);
+  assert (list  != nullptr);
+  if (index < 0) {
+    return ListErr::bad_insert_index;
+  }
 
-	int inserted_elem = listFindEmptyCell (list);
+  int inserted_elem = listFindEmptyCell (list);
 
+  list->cells[inserted_elem].elem = value;
 
-	list->cells[inserted_elem].elem = value;
-
-	list->cells[inserted_elem].prew_index = index;
+  list->cells[inserted_elem].prew_index = index;
 
 // [ #### WORKING WITH ELEMENTS IN TAIL OF LIST ############################## ]
-	if (index == list->size) {
-		if (list->cells[inserted_elem].prew_index != 0) {
-			list->cells[list->cells[inserted_elem].prew_index].next_index = inserted_elem;
-		}
+  if (index == list->size) {
+    if (list->cells[inserted_elem].prew_index != 0) {
+      list->cells[list->cells[inserted_elem].prew_index].next_index = inserted_elem;
+    }
 
-		list->cells[inserted_elem].next_index = 0;
+    list->cells[inserted_elem].next_index = 0;
 
-		list->size++;
+    list->size++;
+    list->tail = inserted_elem;
 
-		return ListErr::noErr;
-	}
+    return ListErr::noErr;
+  }
 
 // [ #### WORKING WITH ELEMENTS IN MIDL OF LIST ############################# ]
-    list->cells[listNext (list, index)].prew_index = inserted_elem;
+  list->cells[listNext (list, index)].prew_index = inserted_elem;
 
-    list->cells[inserted_elem].next_index = list->cells[index].next_index;
-    list->cells[index].next_index = inserted_elem;
+  list->cells[inserted_elem].next_index = list->cells[index].next_index;
+  list->cells[index].next_index = inserted_elem;
 
-	list->size++;
+  list->size++;
 
-	return ListErr::noErr;
+  return ListErr::noErr;
 }
 
 //--------------------------------------------------------------------------------
 
 ListErr listRemove (ListExample *list, int index)
 {
-	assert (list != nullptr);
+  assert (list != nullptr);
 
-	list->cells[index].elem = 0;
+  list->cells[index].elem = 0;
 
-    list->cells[list->cells[index].next_index].prew_index = list->cells[index].prew_index;
-    list->cells[list->cells[index].prew_index].next_index = list->cells[index].next_index;
+  list->cells[list->cells[index].next_index].prew_index = list->cells[index].prew_index;
+  list->cells[list->cells[index].prew_index].next_index = list->cells[index].next_index;
 
-    list->cells[index].next_index = list->free;
-    list->cells[index].prew_index = -1;
+  list->cells[index].next_index = list->free;
+  list->cells[index].prew_index = -1;
 
-    list->free = index;
+  list->free = index;
 
-    list->size--;
+  list->size--;
 
-    return ListErr::noErr;
+  return ListErr::noErr;
 }
 
 //--------------------------------------------------------------------------------
 
 ListErr listChangeCapacity (ListExample *list, int new_capacity)
 {
-	assert (list != nullptr);
+  assert (list != nullptr);
 
-	list->cells = (CellExample *)realloc (list->cells, new_capacity * sizeof (CellExample) );
+  list->cells = (CellExample *)realloc (list->cells, new_capacity * sizeof (CellExample) );
 
-	list->cells[list->capacity - 1].next_index = list->capacity;
+  list->cells[list->capacity - 1].next_index = list->capacity;
 
-	for (int elem = list->capacity; elem < new_capacity; elem++) {
-		list->cells[elem].prew_index = -1;
-		list->cells[elem].elem = 0;
-		list->cells[elem].next_index = (elem == new_capacity - 1) ? 0 : elem + 1;
-	}
+  for (int elem = list->capacity; elem < new_capacity; elem++) {
+    list->cells[elem].prew_index = -1;
+    list->cells[elem].elem = 0;
+    list->cells[elem].next_index = (elem == new_capacity - 1) ? 0 : elem + 1;
+  }
 
-	list->capacity *= INCREASE_COEF;
+  list->capacity *= INCREASE_COEF;
 
-	return ListErr::noErr;
+  return ListErr::noErr;
 }
 
 //--------------------------------------------------------------------------------
 
 ListErr listDtor (ListExample *list)
 {
-	assert (list != nullptr);
+  assert (list != nullptr);
 
-	list->head     = 0;
-	list->tail     = 0;
-	list->free     = 0;
-	list->size 	   = 0;
-	list->capacity = 0;
+  list->head     = 0;
+  list->tail     = 0;
+  list->free     = 0;
+  list->size     = 0;
+  list->capacity = 0;
 
-	free (list->cells);
+  free (list->cells);
 
-	#ifdef DEBUG
-		fclose(list->dump_file);
-	#endif//DEBUG
+  #ifdef DEBUG
+    fclose(list->dump_file);
+  #endif//DEBUG
 
-	return ListErr::noErr;
+  return ListErr::noErr;
 }
 
 //--------------------------------------------------------------------------------
 
 list_t listGet (ListExample *list, size_t index)
 {
-	assert (list != nullptr);
+  assert (list != nullptr);
 
-	return list->cells[index].elem;
+  return list->cells[index].elem;
 }
 
 //--------------------------------------------------------------------------------
 
 int listPrew (ListExample *list, size_t index)
 {
-	assert (list != nullptr);
+  assert (list != nullptr);
 
-	return list->cells[index].prew_index;
+  return list->cells[index].prew_index;
 }
 
 //--------------------------------------------------------------------------------
 
 int listNext (ListExample *list, size_t index)
 {
-	assert (list != nullptr);
+  assert (list != nullptr);
 
-	return list->cells[index].next_index;
+  return list->cells[index].next_index;
 }
 
 //--------------------------------------------------------------------------------
 
 void listDump (ListExample* list)
 {
-    fprintf (OUT, "[ ######################### DUMP ################################ ]\n");
-    fprintf (OUT, "  ---------------------------------------------------------------\n");
+  fprintf (OUT, "[ ######################### DUMP ################################ ]\n");
+  fprintf (OUT, "  ---------------------------------------------------------------\n");
 
     for (int checked_elem = 0; checked_elem < list->capacity; checked_elem++) {
-	    fprintf (OUT, "el: [%3d] is %4d\t", checked_elem, list->cells[checked_elem].elem);
-	    fprintf (OUT, "Next [%3d] is %4d \t", checked_elem , list->cells[checked_elem].next_index);
-	    fprintf (OUT, "Prev [%3d] is %4d\n", checked_elem ,list->cells[checked_elem].prew_index);
-	}
+      fprintf (OUT, "el: [%3d] is %4d\t", checked_elem, list->cells[checked_elem].elem);
+      fprintf (OUT, "Next [%3d] is %4d \t", checked_elem , list->cells[checked_elem].next_index);
+      fprintf (OUT, "Prev [%3d] is %4d\n", checked_elem ,list->cells[checked_elem].prew_index);
+  }
 
-	fprintf (OUT, "  ---------------------------------------------------------------\n");
+  fprintf (OUT, "  ---------------------------------------------------------------\n");
     fprintf (OUT, "\n");
 
     fprintf (OUT, "The maximum size of list - %d\n", list->capacity);
@@ -249,49 +252,161 @@ void listDump (ListExample* list)
 
 void createGraph (ListExample *list)
 {
-	assert (list != nullptr);
+  assert (list != nullptr);
 
-	char graph_name[MAX_NAME_LEN] = {};
-	sprintf(graph_name, "%sdump_file.dot", DIR_PTR);
+  char graph_name[MAX_NAME_LEN] = {};
+  sprintf(graph_name, "%sdump_file.dot", DIR_PTR);
 
-	FILE *graph_file = fopen (graph_name, "w");
-	assert (graph_file != nullptr);
+  FILE *graph_file = fopen (graph_name, "w");
+  assert (graph_file != nullptr);
 
-	fprintf (graph_file, "digraph G {\n");
+  fprintf (graph_file, "digraph G {\n");
 
 // [ #### RENDERING GRAPH-FILE ############################# ]
-	for (int graph_index = 0; graph_index < list->capacity; ++graph_index) {
+  for (int graph_index = 0; graph_index < list->capacity; ++graph_index) {
         fprintf (graph_file, "\tL%d[shape=\"record\", label=\" <lp%d> %d | {%d | %d} | <ln%d> %d\"];\n",
-        	graph_index, graph_index, list->cells[graph_index].prew_index, graph_index,
-        	list->cells[graph_index].elem, graph_index, list->cells[graph_index].next_index);
+          graph_index, graph_index, list->cells[graph_index].prew_index, graph_index,
+          list->cells[graph_index].elem, graph_index, list->cells[graph_index].next_index);
     }
 
     for (int graph_index = 0; graph_index < list->capacity - 1; ++graph_index){
         fprintf (graph_file, "\tL%d->L%d[color=\"white\"];\n", graph_index, graph_index + 1);
     }
 
-	for (int graph_index = 0; graph_index < list->capacity; ++graph_index){
+  for (int graph_index = 0; graph_index < list->capacity; ++graph_index){
         fprintf (graph_file, "\tL%d:<ln%d> -> L%d[color=\"%s\"];\n",
-        	graph_index, graph_index ,list->cells[graph_index].next_index,
-        	( (list->cells[graph_index].prew_index == -1) ? "black" : "green" ) );
+          graph_index, graph_index ,list->cells[graph_index].next_index,
+          ( (list->cells[graph_index].prew_index == -1) ? "black" : "green" ) );
         if(list->cells[graph_index].prew_index != -1){
             fprintf (graph_file, "\tL%d -> L%d[color=\"%s\"];\n",
-            	graph_index, list->cells[graph_index].prew_index, "red");
+              graph_index, list->cells[graph_index].prew_index, "red");
         }
     }
 
     fprintf (graph_file, "\tFree[shape=\"rectangle\",style=\"filled\",fillcolor=\"lightgrey\"]");
     fprintf (graph_file, "\tFree->L%d[color=\"%s\"]", list->free, "black");
     
-	fprintf (graph_file, "\n}\n");
+  fprintf (graph_file, "\n}\n");
 
-	fclose (graph_file);
+  fclose (graph_file);
 
 // [ #### RENDER COMMAND ############################# ]
-	char command[MAX_COMMAND_LEN] = {};
-	sprintf (command, "dot %sdump_file.dot -T png -o %sdump_file.png", DIR_PTR, DIR_PTR);
-	system (command);
+  char command[MAX_COMMAND_LEN] = {};
+  sprintf (command, "dot %sdump_file.dot -T png -o %sdump_file.png", DIR_PTR, DIR_PTR);
+  system (command);
 
-	return;
+  return;
 }
 
+//--------------------------------------------------------------------------------
+
+ListErr verifyListStruct (ListExample *list)
+{
+  assert(list != nullptr);
+  
+  if (list->head == list->tail && list->size > 1) {
+    return ListErr::incorrect_size;
+  }
+
+  if (list->size > 1) {
+    if (list->tail == 0){
+        return ListErr::bad_tail_have_nodes;
+    }
+    if (list->head < 0) {
+        return ListErr::bad_hade_have_nodes;
+    }
+  }
+
+  if (list->size > list->capacity) {
+      return ListErr::memory_error;
+  }
+
+  return ListErr::noErr;
+}
+
+//--------------------------------------------------------------------------------
+
+ListErr listVerify (ListExample *list, int *find_bad_cell)
+{
+  if (list->tail < 0) {
+    return ListErr::bad_hade_have_nodes;
+  }
+  for (int cur_node = 0; cur_node < list->capacity; cur_node++) {
+    CellExample cur_cell = list->cells[cur_node];
+    
+    if (cur_cell.next_index < 0 && cur_cell.prew_index != -1) {
+      *find_bad_cell = cur_node;
+      return ListErr::bad_index_next;
+    }
+
+    if (cur_node == 0) {
+      if (cur_cell.next_index != cur_cell.prew_index) {
+        *find_bad_cell = cur_node;
+        return ListErr::break_point;
+      }
+
+      continue;
+    }
+
+    if (cur_cell.prew_index == 0 && cur_node > 0 && list->head != 0) {
+      if (cur_node != list->head) {
+        return ListErr::bad_hade_have_nodes;
+      }
+    }
+
+    if (cur_cell.next_index == cur_cell.prew_index) {
+      if (list->capacity > 2) {
+        *find_bad_cell = cur_node;
+        return ListErr::endless_loop;
+      }
+    }
+
+    if (cur_node != list->cells[cur_cell.prew_index].next_index && cur_node > 1 && cur_cell.prew_index != -1) {
+      *find_bad_cell = cur_node;
+      return ListErr::bad_index_next;
+    }
+
+    if ((cur_cell.next_index == 0) && (cur_cell.prew_index != -1)) {
+      if (cur_node != list->tail) {
+        *find_bad_cell = cur_node;
+        return ListErr::bad_tail_have_nodes;
+      }
+    }
+
+    else if ((cur_node != list->cells[cur_cell.next_index].prew_index) && (cur_cell.prew_index != -1)) {
+      *find_bad_cell = cur_node;
+      return ListErr::bad_index_prew;
+    }
+    
+  }
+
+  return ListErr::noErr;
+}
+
+const char* translateErrorCode (ListErr error)
+{
+  switch (error) {
+    case ListErr::noErr:                 return "No errors in list";
+
+    case ListErr::bad_insert_index:      return "Incorrect insertion data";
+    case ListErr::strucNullptr:          return "Bad ptr to structure";
+    case ListErr::listEmpty:             return "Empy list error";
+    case ListErr::badElType:             return "Element in list have bad type";
+
+    case ListErr::head_equal_tail:       return "Head and tail in list is equal";
+    case ListErr::break_point:           return "List have breakpoint";
+    case ListErr::endless_loop:          return "Endless loop in list";
+
+    case ListErr::have_nodes:            return "sag";
+    case ListErr::memory_error:          return "Size in list more than capacity";
+    case ListErr::incorrect_size:        return "Tail == head, list have elements";
+
+    case ListErr::bad_tail_have_nodes:   return "List have incorrect tail";
+    case ListErr::bad_hade_have_nodes:   return "List have incorrect head";
+
+    case ListErr::bad_index_prew:        return "Incorrect prew index in list";
+    case ListErr::bad_index_next:        return "incorrect next index in list";
+
+    default:                             return "undef. error";
+  }
+}

@@ -24,6 +24,7 @@
 
 #define MAX_NAME_LEN 32
 #define MAX_COMMAND_LEN 100
+#define MAX_STRING_LEN 100
 #define DIR_PTR "visualize/"
 #define DEBUG
 
@@ -46,11 +47,11 @@ typedef int list_t;
  */
 struct CellExample
 {
-    int prew_index = -1;
+  int prew_index = -1;
 
-    list_t elem    =  0;
+  list_t elem    =  0;
 
-    int next_index = -1;
+  int next_index = -1;
 };
 
 /**
@@ -63,18 +64,18 @@ struct CellExample
  */
 struct ListExample
 {
-	int    capacity     = 0;
+  int    capacity     = 0;
 
-    int head            = 0;
-    int tail            = 0;
-    int free            = 0;
-    int size            = 0;
+  int head            = 0;
+  int tail            = 0;
+  int free            = 0;
+  int size            = 0;
 
-    #ifdef DEBUG
-        FILE *dump_file = nullptr;
-    #endif//DEBUG
+  #ifdef DEBUG
+    FILE *dump_file = nullptr;
+  #endif//DEBUG
 
-	CellExample *cells  = 0;
+  CellExample *cells  = 0;
 };
 
 /**
@@ -84,11 +85,26 @@ struct ListExample
  */
 enum class ListErr: char
 {
-	noErr,
-
-	strucNullptr,
-	listEmpty,
-	badElType
+  noErr,
+// [ ### general ### ]
+  bad_insert_index,
+  strucNullptr,
+  listEmpty,
+  badElType,
+// [ ### sequence ### ]
+  head_equal_tail,
+  break_point,
+  endless_loop,
+// [ ### list size ### ]
+  have_nodes,
+  memory_error,
+  incorrect_size,        // 10
+// [ ### endings ### ]
+  bad_tail_have_nodes,
+  bad_hade_have_nodes,
+// [ ### indexes ### ]
+  bad_index_prew,
+  bad_index_next,
 };
 
 /**
@@ -202,5 +218,32 @@ void listDump (ListExample* List);
  */
 void createGraph (ListExample *list);
 
+/**
+ * @brief Verify list structure
+ * 
+ * @param list current list structure
+ * 
+ * @return ListErr data
+ */
+ListErr verifyListStruct (ListExample *list);
+
+/**
+ * @brief Verify list structure
+ * 
+ * @param list current list structure
+ * 
+ * @return ListErr data
+ */
+ListErr listVerify (ListExample *list, int *find_bad_cell);
+
+/**
+ * @brief Translate error code into message
+ */
+const char* translateErrorCode (ListErr error);
+
+/**
+ * @brief Tests list
+ */
+void tests (ListExample *list);
 
 #endif//LIST_H
