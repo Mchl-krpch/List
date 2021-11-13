@@ -182,7 +182,7 @@ int listFindEmptyCell (ListExample *list);
  * 
  * @return ListErr value [ check ListErr enum ]
  */
-list_t listGet (ListExample *list, size_t index);
+list_t listGet (ListExample *list, int index);
 
 /**
  * @brief ListGet analogue, but we get prew elemetn
@@ -192,7 +192,7 @@ list_t listGet (ListExample *list, size_t index);
  * 
  * @return ListErr value [ check ListErr enum ]
  */
-int listPrew (ListExample *list, size_t index);
+int listPrew (ListExample *list, int index);
 
 /**
  * @brief ListGet analogue, but we get Next elemetn
@@ -202,7 +202,7 @@ int listPrew (ListExample *list, size_t index);
  * 
  * @return ListErr value [ check ListErr enum ]
  */
-int listNext (ListExample *list, size_t index);
+int listNext (ListExample *list, int index);
 
 /**
  * @brief Dump list example

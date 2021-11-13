@@ -33,6 +33,10 @@ ListErr listCtor (ListExample* list, int start_capacity)
 {
   assert (list != nullptr);
 
+  if (start_capacity < 0) {
+    return ListErr::memory_error;
+  }
+
   list->head     = 0;
   list->tail     = 0;
   list->free     = 1;
@@ -97,6 +101,7 @@ int listFindEmptyCell (ListExample *list)
 ListErr InsertAfter (int index, ListExample *list, list_t value)
 {
   assert (list  != nullptr);
+
   if (index < 0) {
     return ListErr::bad_index;
   }
@@ -137,6 +142,7 @@ ListErr InsertAfter (int index, ListExample *list, list_t value)
 ListErr listRemove (ListExample *list, int index)
 {
   assert (list != nullptr);
+  
   if (index < 0) {
     return ListErr::bad_index;
   }
@@ -161,6 +167,10 @@ ListErr listRemove (ListExample *list, int index)
 ListErr listChangeCapacity (ListExample *list, int new_capacity)
 {
   assert (list != nullptr);
+
+  if (new_capacity < 1) {
+    return ListErr::memory_error;
+  }
 
   list->cells = (CellExample *)realloc (list->cells, new_capacity * sizeof (CellExample) );
 
@@ -200,27 +210,30 @@ ListErr listDtor (ListExample *list)
 
 //--------------------------------------------------------------------------------
 
-list_t listGet (ListExample *list, size_t index)
+list_t listGet (ListExample *list, int index)
 {
   assert (list != nullptr);
+  assert (index > 0);
 
   return list->cells[index].elem;
 }
 
 //--------------------------------------------------------------------------------
 
-int listPrew (ListExample *list, size_t index)
+int listPrew (ListExample *list, int index)
 {
   assert (list != nullptr);
+  assert (index > 0);
 
   return list->cells[index].prew_index;
 }
 
 //--------------------------------------------------------------------------------
 
-int listNext (ListExample *list, size_t index)
+int listNext (ListExample *list, int index)
 {
   assert (list != nullptr);
+  assert (index > 0);
 
   return list->cells[index].next_index;
 }
@@ -331,6 +344,9 @@ ListErr verifyListStruct (ListExample *list)
 
 ListErr listVerify (ListExample *list, int *find_bad_cell)
 {
+  assert (list != nullptr);
+  assert (find_bad_cell != nullptr);
+
   if (list->tail < 0) {
     return ListErr::bad_hade_have_nodes;
   }
