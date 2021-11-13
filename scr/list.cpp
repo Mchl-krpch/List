@@ -118,7 +118,7 @@ ListErr InsertAfter (int index, ListExample *list, list_t value)
 
   list->size++;
 
-  if (list->cells[inserted_elem].next_index == 0) {
+  if (list->cells[inserted_elem].next_index == 0 && list->cells[inserted_elem].prew_index != -1) {
     list->tail = inserted_elem;
   }
 
