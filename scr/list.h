@@ -156,6 +156,17 @@ ListErr listChangeCapacity (ListExample *list, int new_capacity);
 ListErr InsertAfter (int index, ListExample *list, list_t value);
 
 /**
+ * @brief Changes list's head to new index
+ * 
+ * @param index New head's index
+ * @param list current list structure
+ * @param value new value in index-position of cur. list
+ * 
+ * @return ListErr value [ check ListErr enum ]
+ */
+ListErr Head (int index, ListExample *list, list_t value);
+
+/**
  * @brief Remove element on [ index ] - position 
  * 
  * @param list current list structure
@@ -245,5 +256,7 @@ const char* translateErrorCode (ListErr error);
  * @brief Tests list
  */
 void tests (ListExample *list);
+
+list_t *createTestListFrom (ListExample *list);
 
 #endif//LIST_H

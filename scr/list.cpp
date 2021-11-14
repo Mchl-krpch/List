@@ -122,6 +122,10 @@ ListErr InsertAfter (int index, ListExample *list, list_t value)
     list->tail = inserted_elem;
   }
 
+  if (list->cells[inserted_elem].prew_index == 0) {
+    list->head = inserted_elem;
+  }
+
   return ListErr::noErr;
 }
 
@@ -407,4 +411,18 @@ const char* translateErrorCode (ListErr error)
 
     default:                             return "undef. error";
   }
+}
+
+list_t *createTestListFrom (ListExample *list)
+{
+  list_t *array = nullptr;
+
+  array = (list_t *)calloc (list->size + 2, sizeof(list_t) );
+
+  for (int elem = 0; elem < list->size + 1; elem++) {
+    array[elem] = list->cells[elem].elem;
+  }
+
+
+  return array;
 }

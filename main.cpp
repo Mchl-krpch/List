@@ -10,7 +10,7 @@ void tests (ListExample *list)
 	int find_bad_cell = 0;
 	int save_data = 0;
 
-	printf("\n[ ######## CHECKS ############################################# ]\n");
+	printf("\n_ [checks] ____________________________________________________\n");
 
 // [ #### BAD NEXT & PREW INDEX ############################## ]
 	save_data = list->cells[10].next_index;
@@ -52,6 +52,33 @@ void tests (ListExample *list)
 	printf ("err: %-32s (in node: %d)\t line: %d\n",
 		translateErrorCode(data), find_bad_cell, __LINE__);
 
+// [ #### CHANGE LIST'S TAIL AND HEAD ###################### ]
+	printf("\nhead before insertion: %d\n", list->head);
+	printf("InsertAfter (0, list, 99)  ");
+	InsertAfter (0, list, 99);
+	printf("head after insertion: %d\n", list->head);
+
+	printf("\ntail before insertion: %d\n", list->tail);
+	printf("InsertAfter (list->tail, list, 33)  ");
+	InsertAfter (list->tail, list, 33);
+	printf("tail now: %d\n", list->tail);
+
+// [ #### INSERTION IN MIDDLE OF LIST ###################### ]
+	list_t *array_of_elems = createTestListFrom (list);
+
+	InsertAfter (list->tail, list, 1);
+	array_of_elems[list->size] = 1;
+
+	printf("\n_ [insertion test] _________\n");
+	for (int el = 0; el < list->size; el++) {
+		if (array_of_elems[el] == list->cells[el].elem) {
+			printf("list: %3d array: %3d  [equal]\n", *(array_of_elems + el + 1), list->cells[el + 1].elem);
+		}
+		else {
+			printf("list: %3d array: %3d  [WRONG]\n", *(array_of_elems + el + 1), list->cells[el + 1].elem);	
+		}
+	}
+
 	return;
 }
 
@@ -64,19 +91,18 @@ int main (void)
 
 // [ #### ADD TO END OF LIST ############################## ]
 	for (int elem = 0; elem < 5; elem++) {
-		InsertAfter (elem, &list, 99);
+		InsertAfter (elem, &list, 13 + elem);
 	}
 
 	/*
-	*/
 // [ #### ADD TO THE MIDDLE ############################### ]
 	for (int elem = 0; elem < 19; elem++) {
 		InsertAfter (3, &list, 11);
 	}
-	InsertAfter (-1, &list, 55);
-	listRemove (&list, -5);
+	*/
 
-	createGraph (&list);
+	printList (&list);
+	// createGraph (&list);
 
 	tests (&list);
 
