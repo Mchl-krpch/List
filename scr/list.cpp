@@ -139,6 +139,14 @@ ListErr listRemove (ListExample *list, int index)
     return ListErr::bad_index;
   }
 
+  if (list->cells[index].prew_index == 0) {
+    list->head = list->cells[index].next_index;
+  }
+
+  if (list->cells[index].next_index == 0 && list->cells[index].prew_index != -1) {
+    list->tail = list->cells[index].prew_index;
+  }
+
   list->cells[index].elem = 0;
 
   list->cells[list->cells[index].next_index].prew_index = list->cells[index].prew_index;
